@@ -1,0 +1,26 @@
+{
+  "name": "binance-notifier",
+  "version": "1.0.0",
+  "description": "Telegram bot for notifying rate changing",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --inspect index.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "16.12.0"
+  },
+  "author": "kortez-1337",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^2.25.0",
+    "dotenv": "^10.0.0",
+    "lodash": "^4.17.21",
+    "mixpanel": "^0.14.0",
+    "mongoose": "^6.1.5",
+    "node-telegram-bot-api": "^0.56.0",
+    "nodemon": "^2.0.14",
+    "prettier": "^2.4.1",
+    "websocket": "^1.0.34"
+  }
+}
