@@ -28,13 +28,31 @@ module.exports = {
         responseKey = "SEND_RATE_LESS_THAN";
         break;
       }
+      case callbackCommandKeys.templatesType.tracking: {
+        responseKey = "SEND_RATE_TRACKING";
+        break;
+      }
       default: {
         break;
       }
     }
 
+    let additionalLabel = "";
+
+    if (
+      userDB.waitFor.data.templateType ===
+      callbackCommandKeys.templatesType.tracking
+    ) {
+      additionalLabel = translate("TRACKING_RECOMMENDED_AMOUNT", userDB.lang, {
+        recommendedAmount: Number((currentRate / 100) * 10).toFixed(2),
+      });
+    }
+
     sendMessageWithLang(
-      `${translate(responseKey, userDB.lang)} ${currentRate}*`
+      `${translate(
+        responseKey,
+        userDB.lang
+      )} ${currentRate}\n\n${additionalLabel}`
     );
   },
   rate: async ({ text, userDB, sendMessageWithLang }) => {
@@ -73,20 +91,29 @@ module.exports = {
             }
             break;
           }
+
           default: {
             break;
           }
         }
       }
 
+      const templateMeta = {
+        direction: userDB.waitFor.data.direction,
+        rateValue: rate,
+      };
+
+      if (
+        waitFor.data.templateType === callbackCommandKeys.templatesType.tracking
+      ) {
+        templateMeta.lastRate = Number(currentRate);
+      }
+
       const template = await TemplatesModel.create({
         userId: userDB._id,
         userChatID: userDB.chatID,
         type: userDB.waitFor.data.templateType,
-        meta: {
-          direction: userDB.waitFor.data.direction,
-          rateValue: rate,
-        },
+        meta: templateMeta,
       });
       userDB.templates = [...userDB.templates, template._id];
       userDB.waitFor = {};
@@ -99,6 +126,10 @@ module.exports = {
       switch (waitFor.data.templateType) {
         case callbackCommandKeys.templatesType.lessThan: {
           templateCreatedKey = "TEMPLATE_CREATED_LESS_THAN";
+          break;
+        }
+        case callbackCommandKeys.templatesType.tracking: {
+          templateCreatedKey = "TEMPLATE_CREATED_TRACKING";
           break;
         }
         default: {

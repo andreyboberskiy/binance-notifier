@@ -39,6 +39,14 @@ class Templates {
         );
         break;
       }
+      case templateTypes.tracking: {
+        templateExecutors.tracking(
+          template,
+          currentDirectionInfo,
+          TelegramBot.bot
+        );
+        break;
+      }
       default: {
         return null;
       }

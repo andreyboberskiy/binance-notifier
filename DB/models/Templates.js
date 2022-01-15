@@ -13,6 +13,7 @@ const TemplatesSchema = new Schema({
   meta: {
     rateValue: { type: Number },
     direction: { type: String, required: true },
+    lastRate: { type: Number },
   },
 });
 

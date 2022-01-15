@@ -46,6 +46,14 @@ module.exports = async (
         templateType: callbackCommandKeys.templatesType.lessThan,
       });
       break;
+    } case callbackCommandKeys.templatesType.tracking: {
+      await controllers.getTemplateTypeAndAskDirection({
+        payload,
+        sendMessage,
+        chatID,
+        templateType: callbackCommandKeys.templatesType.tracking,
+      });
+      break;
     }
     default: {
       sendMessage("CANT_UNDERSTAND", "en");

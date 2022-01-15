@@ -13,7 +13,7 @@ class BinanceObserver {
     ws.connect(appConfig.binanceSocketUrl);
 
     ws.on("connect", (connection) => {
-      console.log('Socket connected')
+      console.log("Socket connected");
 
       connection.on("close", (data) => {
         console.log("Socket connection has been closed", data);
@@ -21,9 +21,6 @@ class BinanceObserver {
       connection.on("error", (err) => {
         console.log("Error with Socket connection", err);
       });
-
-
-
 
       connection.on("message", (message) => {
         let parsedData = JSON.parse(message.utf8Data);
@@ -34,18 +31,18 @@ class BinanceObserver {
           parsedData = parsedData.map((data) => ({
             timestamp: data.E,
             direction: data.s,
-            rate: data.c,
+            rate: Number(data.c),
           }));
           this.broadcast(parsedData);
         }
       });
 
       connection.send(
-          JSON.stringify({
-            id: 2,
-            method: "SUBSCRIBE",
-            params: ["!miniTicker@arr@3000ms"],
-          })
+        JSON.stringify({
+          id: 2,
+          method: "SUBSCRIBE",
+          params: ["!miniTicker@arr@3000ms"],
+        })
       );
     });
   }

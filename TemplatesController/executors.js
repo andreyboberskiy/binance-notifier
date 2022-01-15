@@ -15,7 +15,7 @@ module.exports = {
         translate("NOTIFY_MORE_THAN", user.lang, {
           direction,
           userRate: meta.rateValue,
-          currentRate: rate,
+          currentRate: rate.toFixed(2),
         }),
         {
           parse_mode: "Markdown",
@@ -40,7 +40,7 @@ module.exports = {
         translate("NOTIFY_LESS_THAN", user.lang, {
           direction,
           userRate: meta.rateValue,
-          currentRate: rate,
+          currentRate: rate.toFixed(2),
         }),
         {
           parse_mode: "Markdown",
@@ -51,6 +51,32 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
+    }
+  },
+
+  tracking: async (template, directionData, bot) => {
+    const { meta, userChatID, _id } = template;
+    let { direction, rate } = directionData;
+
+    const changeValue = rate - meta.lastRate;
+
+    if (Math.abs(changeValue) >= meta.rateValue) {
+      const user = await getUserByChatID(userChatID);
+
+      await bot.sendMessage(
+        userChatID,
+        translate("NOTIFY_TRACKING", user.lang, {
+          direction,
+          userRate: `${changeValue > 0 ? "🟢" : "🔻"}${changeValue.toFixed(2)}`,
+          currentRate: rate.toFixed(2),
+        }),
+        {
+          parse_mode: "Markdown",
+        }
+      );
+
+      template.meta = { ...template.meta, lastRate: Number(rate) };
+      await template.save();
     }
   },
 };
