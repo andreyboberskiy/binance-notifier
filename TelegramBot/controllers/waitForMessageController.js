@@ -4,6 +4,7 @@ const callbackCommandKeys = require("../callbackCommandKeys");
 const translate = require("../../locales/translate");
 const TemplatesModel = require("../../DB/models/Templates");
 const keyboards = require("../../keyboards");
+const axios = require("axios");
 
 module.exports = {
   direction: async ({ text, sendMessageWithLang, userDB }) => {
@@ -147,5 +148,47 @@ module.exports = {
     } else {
       sendMessageWithLang("ONLY_NUMBERS");
     }
+  },
+
+  donate: async (text, sendMessage, userDB) => {
+    const amount = parseFloat(text);
+
+    if (amount < 1) {
+      sendMessage("DONATE_TOO_SMALL");
+    } else if (amount > 100000) {
+      sendMessage("DONATE_TOO_BIG");
+    }
+
+    sendMessage("DONATE_GENERATE_REQ");
+
+    const response = await axios.post(
+      "https://yoomoney.ru/quickpay/confirm.xml",
+      {
+        receiver: "4100115898774763",
+        "quickpay-form": "shop",
+        paymentType: "AC",
+        sum: amount * 76, // USD to RUB
+        label: `BinanceNotifier:${userDB.chatID}:${userDB.firstName}`,
+        targets: "Binance Notifier: поддержка проекта",
+        formcomment: "Binance Notifier: поддержка проекта",
+        "short-dest": "Binance Notifier: поддержка проекта",
+      },
+      { timeout: 10000 }
+    );
+
+    const paymentUrl = response?.request?.res?.responseUrl;
+
+    sendMessage(
+      "DONATE_FINISH_STEP",
+      keyboards.generateKeyboardWithCallback({
+        buttons: [
+          {
+            text: translate("PAY", userDB.lang),
+            url: paymentUrl,
+          },
+        ],
+        countInLine: 1,
+      })
+    );
   },
 };

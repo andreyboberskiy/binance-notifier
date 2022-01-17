@@ -62,6 +62,13 @@ module.exports = async (message, sendMessage) => {
         );
         return;
       }
+      case commandKeys.donate.key: {
+        await commandControllers.askForDonateAmount(
+          sendMessageWithLang,
+          userDB
+        );
+        return;
+      }
       case commandKeys.settings.key: {
         await sendMessageWithLang("SETTINGS", keyboards.settings(userLang));
         return;
@@ -99,6 +106,14 @@ module.exports = async (message, sendMessage) => {
             sendMessageWithLang,
             userDB,
           });
+          return;
+        }
+        case waitForMessageKeys.donate: {
+          await waitForMessageController.donate(
+            text,
+            sendMessageWithLang,
+            userDB
+          );
           return;
         }
         default: {

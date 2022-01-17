@@ -13,6 +13,7 @@
   "author": "kortez-1337",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.24.0",
     "cross-env": "^7.0.3",
     "date-fns": "^2.25.0",
     "dotenv": "^10.0.0",

@@ -190,4 +190,10 @@ module.exports = {
       sendMessage("TEMPLATE_NOT_FOUND", payload.lang);
     }
   },
+
+  askForDonateAmount: async (sendMessage, userDB) => {
+    userDB.waitFor = { key: waitForMessageKeys.donate };
+    await userDB.save();
+    sendMessage("ENTER_DONATE_AMOUNT");
+  },
 };
