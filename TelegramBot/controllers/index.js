@@ -88,6 +88,7 @@ module.exports = {
       })}${templates
         .map((t) =>
           translate("TEMPLATE_DESC", userLang, {
+            identifier: t._id,
             templateType: translate(t.type, userLang),
             direction: t.meta.direction,
             rateValue: t.meta.rateValue,
@@ -139,6 +140,29 @@ module.exports = {
     sendMessage("🙃", keyboards.homeMenu(userDB.lang));
   },
 
+  onDeleteTemplateMessage: async (sendMessage, userDB) => {
+    const templates = await TemplatesModel.find({ userId: userDB._id });
+
+    if (templates?.length > 0) {
+      sendMessage(
+        "SELECT_TEMPLATE_ID",
+        keyboards.generateKeyboardWithCallback({
+          buttons: templates.map((t) => ({
+            text: t._id.toString(),
+            callback_data: JSON.stringify({
+              command: callbackCommandKeys.deleteTemplate,
+              payload: { id: t._id, lang: userDB.lang },
+            }),
+          })),
+          countInLine: 4,
+          options: { parse_mode: "Markdown" },
+        })
+      );
+    } else {
+      sendMessage("HAVENT_TEMPLATES");
+    }
+  },
+
   getTemplateTypeAndAskDirection: async ({
     payload,
     chatID,
@@ -154,5 +178,16 @@ module.exports = {
     };
     await user.save();
     sendMessage("SEND_DIRECTION", lang, keyboards.backHome(lang));
+  },
+
+  deleteTemplate: async ({ payload, sendMessage }) => {
+    const template = await TemplatesModel.findOne({ _id: payload.id });
+
+    if (template) {
+      await template.remove();
+      sendMessage("TEMPLATE_WAS_DELETED", payload.lang);
+    } else {
+      sendMessage("TEMPLATE_NOT_FOUND", payload.lang);
+    }
   },
 };

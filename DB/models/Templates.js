@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const autoIncrement = require("mongoose-auto-increment");
 
 const callbackCommandKeys = require("../../TelegramBot/callbackCommandKeys");
 
@@ -8,7 +9,7 @@ const TemplatesSchema = new Schema({
     enum: Object.values(callbackCommandKeys.templatesType),
     required: true,
   },
-  userId: { type: Schema.Types.ObjectId, ref: "Users" },
+  userId: { type: Number, ref: "Users" },
   userChatID: { type: Number, required: true },
   meta: {
     rateValue: { type: Number },
@@ -16,5 +17,7 @@ const TemplatesSchema = new Schema({
     lastRate: { type: Number },
   },
 });
+
+TemplatesSchema.plugin(autoIncrement.plugin, "Templates");
 
 module.exports = model("Templates", TemplatesSchema);

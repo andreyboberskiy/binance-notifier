@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const autoIncrement = require("mongoose-auto-increment");
+
 const appConfig = require("../configs/appConfig");
 
 class DB {

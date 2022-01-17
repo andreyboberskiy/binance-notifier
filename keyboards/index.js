@@ -49,8 +49,11 @@ const keyBoards = {
     reply_markup: JSON.stringify({
       resize_keyboard: true,
       keyboard: [
-        [commandKeys.createTemplate.texts[lang]],
         [commandKeys.myTemplates.texts[lang]],
+        [
+          commandKeys.createTemplate.texts[lang],
+          commandKeys.deleteTemplate.texts[lang],
+        ],
         [commandKeys.settings.texts[lang], commandKeys.donate.texts[lang]],
       ],
     }),

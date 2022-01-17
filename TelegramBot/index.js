@@ -47,7 +47,7 @@ class TelegramBot {
         parse_mode: "Markdown",
       });
     };
-    onCallbackDataListener(data, sendMessage);
+    onCallbackDataListener(data, sendMessage, bot.deleteMessage);
   }
 }
 

@@ -32,7 +32,7 @@ module.exports = {
     "🔔 Template *Less than* has been completed 🔔\n\n*direction* rate has reached *userRate* and is now *currentRate*",
   YOU_HAVE_COUNT_TEMPLATES: "Number of active templates: *count*\n\n",
   TEMPLATE_DESC:
-    "*Template:* templateType\n*Direction*: direction\n*Rate value*: rateValue\n\n",
+    "*ID:* identifier\n*Template:* templateType\n*Direction*: direction\n*Rate value*: rateValue\n\n",
 
   LANG_CHANGED: "Language has been changed",
 
@@ -45,7 +45,7 @@ module.exports = {
   NOTIFY_TRACKING:
     "🔔 Шаблон *Трекинг* сработал 🔔\n\nКурс *direction* изменился на *userRate* и сейчас составляет *currentRate*",
   SETTINGS: "Settings",
-  CHOOSE_NEW_LANG: "Выберите язык",
+  CHOOSE_NEW_LANG: "🇺🇸🇷🇺 Choose new language",
 
   TRACKING_RECOMMENDED_AMOUNT:
     "*Рекомендую использовать значение близкое к 10%:* recommendedAmount",

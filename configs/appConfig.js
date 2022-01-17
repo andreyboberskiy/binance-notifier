@@ -1,5 +1,4 @@
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 module.exports = {
   telegramBotToken: process.env.TELEGRAM_BOT_API_KEY,

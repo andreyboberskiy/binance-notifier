@@ -55,11 +55,10 @@ module.exports = {
   },
 
   tracking: async (template, directionData, bot) => {
-    const { meta, userChatID, _id } = template;
+    const { meta, userChatID } = template;
     let { direction, rate } = directionData;
 
     const changeValue = rate - meta.lastRate;
-
     if (Math.abs(changeValue) >= meta.rateValue) {
       const user = await getUserByChatID(userChatID);
 

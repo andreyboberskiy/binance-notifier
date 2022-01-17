@@ -5,4 +5,5 @@ module.exports = {
     lessThan: "lessThan",
     tracking: "tracking",
   },
+  deleteTemplate: "deleteTemplate",
 };
