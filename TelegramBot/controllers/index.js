@@ -127,7 +127,7 @@ module.exports = {
             direction: t.meta.direction,
             rateValue: t.meta.rateValue,
             currentRate: RateCache.rates[t.meta.direction]?.toFixed(4) || "-",
-            lastRate: t.lastRate || "-",
+            lastRate: t.meta.lastRate || "-",
           })
         )
         .join("")}`;
