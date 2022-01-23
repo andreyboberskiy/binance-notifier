@@ -16,23 +16,28 @@ module.exports = async (
   sendMessage
 ) => {
   try {
-    const { command, payload } = JSON.parse(data);
+    const { c: command, p: payload } = JSON.parse(data);
 
-    const userLang = payload.lang;
+    const userLang = payload.l;
 
     const sendMessageWithLang = (text, options = {}) =>
       sendMessage(translate(text, userLang), options);
 
     switch (command) {
       case callbackCommandKeys.setLanguage: {
-        const newLang = payload.value;
-
-        await controllers.setLanguage(chatID, newLang, first_name);
+        await controllers.setLanguage(chatID, userLang, first_name);
 
         sendMessageWithLang(
           payload.change ? "LANG_CHANGED" : "CREATE_TEMPLATE",
-          keyboards.homeMenu(newLang)
+          keyboards.homeMenu(userLang)
         );
+        break;
+      }
+      case callbackCommandKeys.deleteTemplate: {
+        await controllers.deleteTemplate({
+          payload,
+          sendMessage: sendMessageWithLang,
+        });
         break;
       }
       case callbackCommandKeys.templatesType.moreThan: {
@@ -66,9 +71,9 @@ module.exports = async (
       case callbackCommandKeys.setDirection: {
         const userDB = await getUserByChatID(chatID);
         await waitForMessageController.direction({
-          text: payload.direction,
+          text: payload.d,
           sendMessageWithLang: (text, options) =>
-            sendMessage(translate(text, userDB.lang), options),
+            sendMessage(translate(text, userLang), options),
           userDB,
         });
         break;

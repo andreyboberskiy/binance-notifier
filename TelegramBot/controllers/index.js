@@ -36,15 +36,15 @@ module.exports = {
           {
             text: "RU 🇷🇺",
             callback_data: JSON.stringify({
-              command: callbackCommandKeys.setLanguage,
-              payload: { value: "ru", lang: "ru" },
+              c: callbackCommandKeys.setLanguage,
+              p: { l: "ru" },
             }),
           },
           {
             text: "EN 🇺🇸",
             callback_data: JSON.stringify({
-              command: callbackCommandKeys.setLanguage,
-              payload: { value: "en", lang: "en" },
+              c: callbackCommandKeys.setLanguage,
+              p: { l: "en" },
             }),
           },
         ],
@@ -53,7 +53,7 @@ module.exports = {
     );
   },
 
-  changeLanguage: async (sendMessage, lang) => {
+  changeLanguage: async (sendMessage) => {
     await sendMessage(
       "CHOOSE_NEW_LANG",
       keyboards.generateKeyboardWithCallback({
@@ -61,15 +61,15 @@ module.exports = {
           {
             text: "RU 🇷🇺",
             callback_data: JSON.stringify({
-              command: callbackCommandKeys.setLanguage,
-              payload: { value: "ru", change: true, lang: "ru" },
+              c: callbackCommandKeys.setLanguage,
+              p: { l: "ru", change: true },
             }),
           },
           {
             text: "EN 🇺🇸",
             callback_data: JSON.stringify({
-              command: callbackCommandKeys.setLanguage,
-              payload: { value: "en", change: true, lang: "en" },
+              c: callbackCommandKeys.setLanguage,
+              p: { l: "en", change: true },
             }),
           },
         ],
@@ -145,22 +145,22 @@ module.exports = {
             {
               text: translate("MORE_THAN_CALLBACK", lang),
               callback_data: JSON.stringify({
-                command: callbackCommandKeys.templatesType.moreThan,
-                payload: { lang },
+                c: callbackCommandKeys.templatesType.moreThan,
+                p: { l: lang },
               }),
             },
             {
               text: translate("LESS_THAN_CALLBACK", lang),
               callback_data: JSON.stringify({
-                command: callbackCommandKeys.templatesType.lessThan,
-                payload: { lang },
+                c: callbackCommandKeys.templatesType.lessThan,
+                p: { l: lang },
               }),
             },
             {
               text: translate("TRACKING_CALLBACK", lang),
               callback_data: JSON.stringify({
-                command: callbackCommandKeys.templatesType.tracking,
-                payload: { lang },
+                c: callbackCommandKeys.templatesType.tracking,
+                p: { l: lang },
               }),
             },
           ],
@@ -185,8 +185,8 @@ module.exports = {
           buttons: templates.map((t) => ({
             text: t._id.toString(),
             callback_data: JSON.stringify({
-              command: callbackCommandKeys.deleteTemplate,
-              payload: { id: t._id, lang: userDB.lang },
+              c: callbackCommandKeys.deleteTemplate,
+              p: { id: t._id, l: userDB.lang },
             }),
           })),
           countInLine: 4,
@@ -215,8 +215,8 @@ module.exports = {
       buttons: popularDirections.map((direction) => ({
         text: direction,
         callback_data: JSON.stringify({
-          command: callbackCommandKeys.setDirection,
-          payload: { direction },
+          c: callbackCommandKeys.setDirection,
+          p: { d: direction, l: user.lang },
         }),
       })),
       countInLine: 4,
