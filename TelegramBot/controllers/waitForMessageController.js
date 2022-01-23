@@ -1,14 +1,20 @@
+const axios = require("axios");
+
 const RateCache = require("../../RateCache");
 const waitForMessageKeys = require("../../configs/waitForMessageKeys");
 const callbackCommandKeys = require("../callbackCommandKeys");
 const translate = require("../../locales/translate");
 const TemplatesModel = require("../../DB/models/Templates");
 const keyboards = require("../../keyboards");
-const axios = require("axios");
+const { clearUserWaitFor } = require("../../DB/services/userService");
 
 module.exports = {
   direction: async ({ text, sendMessageWithLang, userDB }) => {
-    const parsedDirection = text.split("/").join("");
+    let parsedDirection = text.toUpperCase();
+
+    if (parsedDirection.includes("/")) {
+      parsedDirection = parsedDirection.split("/").join("");
+    }
 
     const currentRate = RateCache.rates[parsedDirection];
 
@@ -155,9 +161,13 @@ module.exports = {
 
     if (amount < 1) {
       sendMessage("DONATE_TOO_SMALL");
+
+      return;
     } else if (amount > 100000) {
       sendMessage("DONATE_TOO_BIG");
+      return;
     }
+    await clearUserWaitFor(userDB.chatID);
 
     sendMessage("DONATE_GENERATE_REQ");
 

@@ -49,4 +49,6 @@ module.exports = {
 
   TRACKING_RECOMMENDED_AMOUNT:
     "*Рекомендую использовать значение близкое к 10%:* recommendedAmount",
+
+  MAIN_MENU: "Главное меню",
 };

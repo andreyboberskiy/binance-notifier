@@ -5,6 +5,7 @@ const commandControllers = require("../controllers");
 const UsersModel = require("../../DB/models/Users");
 const waitForMessageKeys = require("../../configs/waitForMessageKeys");
 const waitForMessageController = require("../controllers/waitForMessageController");
+const translate = require("../../locales/translate");
 
 module.exports = async (message, sendMessage) => {
   try {
@@ -30,8 +31,7 @@ module.exports = async (message, sendMessage) => {
     const waitForKey = userDB?.waitFor?.key;
 
     const sendMessageWithLang = (text, options = {}) => {
-      const lang = userLang || options.lang;
-      sendMessage(text, lang, options);
+      sendMessage(translate(text, userLang), options);
     };
 
     switch (command) {
@@ -78,11 +78,7 @@ module.exports = async (message, sendMessage) => {
         return;
       }
       case commandKeys.start.key: {
-        await commandControllers.start(
-          sendMessage,
-          chatID,
-          message.from.first_name
-        );
+        await commandControllers.start(sendMessageWithLang);
         return;
       }
       default: {
@@ -123,9 +119,7 @@ module.exports = async (message, sendMessage) => {
       }
     }
 
-    sendMessageWithLang("CANT_UNDERSTAND", {
-      options: keyboards.homeMenu(userDB?.lang),
-    });
+    sendMessageWithLang("CANT_UNDERSTAND", keyboards.homeMenu(userDB?.lang));
   } catch (e) {
     console.log("OnMessageListener error", e);
   }

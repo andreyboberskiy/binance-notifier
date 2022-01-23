@@ -6,4 +6,5 @@ module.exports = {
     tracking: "tracking",
   },
   deleteTemplate: "deleteTemplate",
+  setDirection: "setDirection",
 };

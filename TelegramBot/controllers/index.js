@@ -8,26 +8,43 @@ const doSafely = require("../../errors/doSafely");
 const translate = require("../../locales/translate");
 const { getUserByChatID } = require("../../DB/services/userService");
 const waitForMessageKeys = require("../../configs/waitForMessageKeys");
+const { templatesType } = require("../../TelegramBot/callbackCommandKeys");
+const RateCache = require("../../RateCache");
+
+const popularDirections = [
+  "BTC/USDT",
+  "ETH/USDT",
+  "LUNA/USDT",
+  "FTM/USDT",
+  "SOL/USDT",
+  "ADA/USDT",
+  "SHIB/USDT",
+  "XRP/USDT",
+  "DOT/USDT",
+  "MASK/USDT",
+  "BURGER/USDT",
+  "ICP/USDT",
+  "CAKE/USDT",
+];
 
 module.exports = {
   start: async (sendMessage) => {
     await sendMessage(
       `Привет🙂 Выбери язык\n\nHi🙂 choose your language`,
-      null,
       keyboards.generateKeyboardWithCallback({
         buttons: [
           {
             text: "RU 🇷🇺",
             callback_data: JSON.stringify({
               command: callbackCommandKeys.setLanguage,
-              payload: { value: "ru" },
+              payload: { value: "ru", lang: "ru" },
             }),
           },
           {
             text: "EN 🇺🇸",
             callback_data: JSON.stringify({
               command: callbackCommandKeys.setLanguage,
-              payload: { value: "en" },
+              payload: { value: "en", lang: "en" },
             }),
           },
         ],
@@ -45,14 +62,14 @@ module.exports = {
             text: "RU 🇷🇺",
             callback_data: JSON.stringify({
               command: callbackCommandKeys.setLanguage,
-              payload: { value: "ru", change: true },
+              payload: { value: "ru", change: true, lang: "ru" },
             }),
           },
           {
             text: "EN 🇺🇸",
             callback_data: JSON.stringify({
               command: callbackCommandKeys.setLanguage,
-              payload: { value: "en", change: true },
+              payload: { value: "en", change: true, lang: "en" },
             }),
           },
         ],
@@ -83,15 +100,34 @@ module.exports = {
         return;
       }
 
+      const getTemplateDescKey = (templateType) => {
+        switch (templateType) {
+          case templatesType.tracking: {
+            return "TEMPLATE_DESC_TRACKING";
+          }
+          case templatesType.lessThan: {
+            return "TEMPLATE_DESC_LESS_THAN";
+          }
+          case templatesType.moreThan: {
+            return "TEMPLATE_DESC_MORE_THAN";
+          }
+          default: {
+            return "Not found";
+          }
+        }
+      };
+
       const message = `${translate("YOU_HAVE_COUNT_TEMPLATES", userLang, {
         count: templates.length,
       })}${templates
         .map((t) =>
-          translate("TEMPLATE_DESC", userLang, {
+          translate(getTemplateDescKey(t.type), userLang, {
             identifier: t._id,
             templateType: translate(t.type, userLang),
             direction: t.meta.direction,
             rateValue: t.meta.rateValue,
+            currentRate: RateCache.rates[t.meta.direction]?.toFixed(4) || "-",
+            lastRate: t.lastRate || "-",
           })
         )
         .join("")}`;
@@ -129,7 +165,6 @@ module.exports = {
             },
           ],
           countInLine: 2,
-          options: { parse_mode: "Markdown" },
         })
       );
     });
@@ -137,7 +172,7 @@ module.exports = {
   backHome: async (sendMessage, userDB) => {
     userDB.waitFor = {};
     await userDB.save();
-    sendMessage("🙃", keyboards.homeMenu(userDB.lang));
+    sendMessage("MAIN_MENU", keyboards.homeMenu(userDB.lang));
   },
 
   onDeleteTemplateMessage: async (sendMessage, userDB) => {
@@ -164,12 +199,10 @@ module.exports = {
   },
 
   getTemplateTypeAndAskDirection: async ({
-    payload,
     chatID,
     sendMessage,
     templateType,
   }) => {
-    const { lang } = payload;
     const user = await getUserByChatID(chatID);
 
     user.waitFor = {
@@ -177,7 +210,19 @@ module.exports = {
       data: { templateType },
     };
     await user.save();
-    sendMessage("SEND_DIRECTION", lang, keyboards.backHome(lang));
+
+    const buttonsAndKeyboard = keyboards.generateKeyboardWithCallback({
+      buttons: popularDirections.map((direction) => ({
+        text: direction,
+        callback_data: JSON.stringify({
+          command: callbackCommandKeys.setDirection,
+          payload: { direction },
+        }),
+      })),
+      countInLine: 4,
+    });
+
+    sendMessage("SEND_DIRECTION", buttonsAndKeyboard);
   },
 
   deleteTemplate: async ({ payload, sendMessage }) => {
@@ -185,9 +230,9 @@ module.exports = {
 
     if (template) {
       await template.remove();
-      sendMessage("TEMPLATE_WAS_DELETED", payload.lang);
+      sendMessage("TEMPLATE_WAS_DELETED");
     } else {
-      sendMessage("TEMPLATE_NOT_FOUND", payload.lang);
+      sendMessage("TEMPLATE_NOT_FOUND");
     }
   },
 

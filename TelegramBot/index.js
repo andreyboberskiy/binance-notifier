@@ -3,7 +3,6 @@ process.env.NTBA_FIX_319 = 1;
 const TelegramBotApi = require("node-telegram-bot-api");
 
 const appConfig = require("../configs/appConfig");
-const translate = require("../locales/translate");
 
 const onMessageListener = require("./listeners/onMessageListener");
 const onCallbackDataListener = require("./listeners/onCallbackDataListener");
@@ -29,9 +28,9 @@ class TelegramBot {
   }
 
   handleMessage(data, bot) {
-    const sendMessage = (translateKeyOrText, lang, options = {}) => {
+    const sendMessage = (text, options = {}) => {
       const chatId = data.chat.id;
-      bot.sendMessage(chatId, translate(translateKeyOrText, lang), {
+      bot.sendMessage(chatId, text, {
         ...options,
         parse_mode: "Markdown",
       });
@@ -40,14 +39,14 @@ class TelegramBot {
   }
 
   handleCallback(data, bot) {
-    const sendMessage = (translateKeyOrText, lang, options = {}) => {
+    const sendMessage = (text, options = {}) => {
       const chatId = data.message.chat.id;
-      bot.sendMessage(chatId, translate(translateKeyOrText, lang), {
+      bot.sendMessage(chatId, text, {
         ...options,
         parse_mode: "Markdown",
       });
     };
-    onCallbackDataListener(data, sendMessage, bot.deleteMessage);
+    onCallbackDataListener(data, sendMessage);
   }
 }
 

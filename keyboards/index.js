@@ -17,30 +17,16 @@ const generateKeyboardWithCallback = ({
     return resultArray;
   }, []);
 
+  const result = {
+    resize_keyboard: true,
+    inline_keyboard: keyboard,
+  };
+
   return {
-    reply_markup: JSON.stringify({
-      resize_keyboard: true,
-      inline_keyboard: keyboard,
-    }),
+    reply_markup: JSON.stringify(result),
     ...options,
   };
 };
-// const generateDefaultRowButtons = (texts, keyboard) => {
-//   return {
-//     reply_markup: JSON.stringify({
-//       resize_keyboard: true,
-//       keyboard: generateKeyboard(texts),
-//     }),
-//   };
-// };
-// const generateDefaultRowButtonsInline = (texts) => {
-//   return {
-//     reply_markup: JSON.stringify({
-//       resize_keyboard: true,
-//       inline_keyboard: generateKeyboardInline(texts),
-//     }),
-//   };
-// };
 
 const keyBoards = {
   generateKeyboardWithCallback,
@@ -58,12 +44,18 @@ const keyBoards = {
       ],
     }),
   }),
-  backHome: (lang = "en") => ({
-    reply_markup: JSON.stringify({
-      resize_keyboard: true,
-      keyboard: [[commandKeys.backHome.texts[lang]]],
-    }),
-  }),
+  backHome: (lang = "en", onlyKeyboard) => {
+    const keyboard = [[commandKeys.backHome.texts[lang]]];
+
+    return onlyKeyboard
+      ? keyboard
+      : {
+          reply_markup: JSON.stringify({
+            resize_keyboard: true,
+            keyboard,
+          }),
+        };
+  },
   settings: (lang = "en") => ({
     reply_markup: JSON.stringify({
       resize_keyboard: true,
