@@ -6,6 +6,7 @@ const UsersModel = require("../../DB/models/Users");
 const waitForMessageKeys = require("../../configs/waitForMessageKeys");
 const waitForMessageController = require("../controllers/waitForMessageController");
 const translate = require("../../locales/translate");
+const Analytic = require("../../Analytic");
 
 module.exports = async (message, sendMessage) => {
   try {
@@ -33,6 +34,12 @@ module.exports = async (message, sendMessage) => {
     const sendMessageWithLang = (text, options = {}) => {
       sendMessage(translate(text, userLang), options);
     };
+
+    Analytic.send("Message", chatID, {
+      command,
+      text,
+      user: { firstName: userDB.firstName, userLang, waitForKey },
+    });
 
     switch (command) {
       case commandKeys.myTemplates.key: {

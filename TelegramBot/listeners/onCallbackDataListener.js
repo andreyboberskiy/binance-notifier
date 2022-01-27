@@ -4,6 +4,7 @@ const keyboards = require("../../keyboards");
 const translate = require("../../locales/translate");
 const waitForMessageController = require("../controllers/waitForMessageController");
 const { getUserByChatID } = require("../../DB/services/userService");
+const Analytic = require("../../Analytic");
 
 module.exports = async (
   {
@@ -22,6 +23,8 @@ module.exports = async (
 
     const sendMessageWithLang = (text, options = {}) =>
       sendMessage(translate(text, userLang), options);
+
+    Analytic.send("Callback", chatID, { command, payload });
 
     switch (command) {
       case callbackCommandKeys.setLanguage: {
