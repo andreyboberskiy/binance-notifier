@@ -5,7 +5,7 @@ class Analytic {
   instance;
   init() {
     this.instance = mixpanel.init(appConfig.mixPanelToken, {
-      // debug: appConfig.isDev,
+      debug: appConfig.isDev,
     });
   }
   send(eventName, id, options = {}) {
