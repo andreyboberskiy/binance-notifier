@@ -7,7 +7,7 @@ module.exports = {
     const { meta, userChatID, _id } = template;
     const { direction, rate } = directionData;
 
-    if (rate >= parseInt(meta.rateValue)) {
+    if (rate >= parseFloat(meta.rateValue)) {
       const user = await getUserByChatID(userChatID);
 
       await bot.sendMessage(
@@ -32,7 +32,7 @@ module.exports = {
     const { meta, userChatID, _id } = template;
     const { direction, rate } = directionData;
 
-    if (rate <= parseInt(meta.rateValue)) {
+    if (rate <= parseFloat(meta.rateValue)) {
       const user = await getUserByChatID(userChatID);
 
       await bot.sendMessage(
