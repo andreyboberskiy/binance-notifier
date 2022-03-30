@@ -40,7 +40,7 @@ const keyBoards = {
           commandKeys.createTemplate.texts[lang],
           commandKeys.deleteTemplate.texts[lang],
         ],
-        [commandKeys.settings.texts[lang], commandKeys.donate.texts[lang]],
+        [commandKeys.settings.texts[lang]],
       ],
     }),
   }),

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --inspect  index.js",
     "start": "cross-env NODE_ENV=production node index.js",
-    "start-pm2": "cross-env NODE_ENV=production pm2 start index.js"
+    "start-nebeus": "cross-env NODE_ENV=nebeus node index.js",
+    "start-pm2": "cross-env NODE_ENV=production pm2 start index.js",
+    "start-nebeus-pm2": "cross-env NODE_ENV=nebeus pm2 start index.js"
   },
   "author": "kortez-1337",
   "license": "ISC",
