@@ -1,5 +1,7 @@
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
+console.log({ nodeEnv: process.env.NODE_ENV });
+
 module.exports = {
   telegramBotToken: process.env.TELEGRAM_BOT_API_KEY,
   binanceSocketUrl: process.env.BINANCE_SOCKET_URL,

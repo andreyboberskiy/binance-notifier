@@ -1,4 +1,5 @@
 const appConfig = require("../configs/appConfig");
+const Analytic = require("../Analytic");
 
 const WS = require("websocket").client;
 
@@ -14,12 +15,20 @@ class BinanceObserver {
 
     ws.on("connect", (connection) => {
       console.log("Socket connected");
+      Analytic.send("SOCKET CONNECTED", "APP");
 
       connection.on("close", (data) => {
         console.log("Socket connection has been closed", data);
+        Analytic.send("Socket connection has been closed", "APP", data);
+
+        setTimeout(() => {
+          this.init().bind(this);
+        }, 1000);
       });
       connection.on("error", (err) => {
         console.log("Error with Socket connection", err);
+        Analytic.send("Error with Socket connection", "APP", err);
+        ws.close();
       });
 
       connection.on("message", (message) => {
