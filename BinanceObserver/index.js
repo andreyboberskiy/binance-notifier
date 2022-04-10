@@ -22,13 +22,16 @@ class BinanceObserver {
         Analytic.send("Socket connection has been closed", "APP", data);
 
         setTimeout(() => {
-          this.init().bind(this);
+          this.init();
         }, 1000);
       });
       connection.on("error", (err) => {
         console.log("Error with Socket connection", err);
         Analytic.send("Error with Socket connection", "APP", err);
         ws.close();
+        setTimeout(() => {
+          this.init();
+        }, 1000);
       });
 
       connection.on("message", (message) => {
